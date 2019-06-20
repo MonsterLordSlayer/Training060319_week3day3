@@ -2,13 +2,18 @@ package com.example.week3day3;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import java.util.Arrays;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.lang.reflect.Array;
+
 public class Async extends AsyncTask<String, String, String> {
     AsyncCallback asyncCallback;
-    public Async(AsyncCallback asyncCallback) {
+    int[] array;
+    public Async(AsyncCallback asyncCallback, int[] array) {
         this.asyncCallback = asyncCallback;
+        this.array=array;
     }
     int num=0;
     @Override
@@ -18,13 +23,7 @@ public class Async extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... strings) {
-        for(int i = 0 ; i < 10; i++) {
-
-
-            strings[0] = "Run Number + " + i;
-            publishProgress(strings);
-        }
-
+        Arrays.sort(array);
         return strings[strings.length - 1];
     }
 
@@ -41,6 +40,14 @@ public class Async extends AsyncTask<String, String, String> {
         super.onPostExecute(s);
         //EventBus.getDefault().post(new MessagingEvent(s));
         asyncCallback.returnString(s);
+        returnarray();
+
+    }
+    public int[] returnarray(){
+        for (int i=0;i<1000;i++){
+            Log.d("TAG", "onPostExecute: "+array[i]);
+        }
+        return array;
     }
 
     interface AsyncCallback{

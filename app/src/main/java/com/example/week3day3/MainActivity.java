@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -18,12 +19,15 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Random;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements Async.AsyncCallback{
     ArrayList<Integer> fibs=new ArrayList<>();
     TextView tvFib;
     TextView tvPi;
+    int[] ints;
     DatabaseHelper databaseHelper;
+    Async asyncTask;
     int count=3;
     double  pi=0;
     @Override
@@ -32,6 +36,16 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         databaseHelper = new DatabaseHelper(this);
+        ints=new int[1000];
+
+        for (int i=0;i<1000;i++){
+            Random r=new Random();
+            int num=r.nextInt((100) + 1) + 1;
+            ints[i]=num;
+        }
+
+        asyncTask = new Async(this,ints);
+        asyncTask.execute("Async Task");
         tvFib=findViewById(R.id.tvFib);
         tvPi=findViewById(R.id.tvPi);
         fibs.add(1);
@@ -170,5 +184,19 @@ public class MainActivity extends AppCompatActivity{
             }
         };
         return returnRunnable;
+    }
+
+    @Override
+    public void returnString(String string) {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        asyncTask.cancel(true);
+    }
+    public void onClick(){
+
     }
 }
