@@ -1,6 +1,10 @@
 package com.example.week3day3;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,22 +15,62 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     ArrayList<Integer> fibs=new ArrayList<>();
     TextView tvFib;
     TextView tvPi;
+    DatabaseHelper databaseHelper;
     int count=3;
     double  pi=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        databaseHelper = new DatabaseHelper(this);
         tvFib=findViewById(R.id.tvFib);
         tvPi=findViewById(R.id.tvPi);
         fibs.add(1);
         fibs.add(1);
+        LoaderManager loaderManager=new LoaderManager() {
+
+            @NonNull
+            @Override
+            public <D> Loader<D> initLoader(int id, @Nullable Bundle args, @NonNull LoaderCallbacks<D> callback) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public <D> Loader<D> restartLoader(int id, @Nullable Bundle args, @NonNull LoaderCallbacks<D> callback) {
+                return null;
+            }
+
+            @Override
+            public void destroyLoader(int id) {
+
+            }
+
+            @Nullable
+            @Override
+            public <D> Loader<D> getLoader(int id) {
+                return null;
+            }
+
+            @Override
+            public void markForRedelivery() {
+
+            }
+
+            @Override
+            public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
+
+            }
+        };
 
         for(Double i=0.0;i<12;i+=1.0){
             Thread thread = new Thread(runnable(i));
@@ -92,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
         Message message=new Message();
         message.setData(bundle);
         looperDemoThread.workerThreadHandler.sendMessage(message);
+
+
 
 
 
